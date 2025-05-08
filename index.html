@@ -206,23 +206,6 @@
     .success-content p {
       margin-bottom: 2rem;
     }
-
-    /* To remove later: Debug console styling */
-    #debug-console {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(0,0,0,0.8);
-      color: white;
-      padding: 10px;
-      font-family: monospace;
-      font-size: 12px;
-      max-height: 150px;
-      overflow-y: auto;
-      display: none;
-      z-index: 1000;
-    }
   </style>
 </head>
 <body>
@@ -256,11 +239,6 @@
       </div>
     </div>
   </div>
-
-  <!-- To remove later: Debug console -->
-  <div id="debug-console"></div>
-  <button id="toggle-debug" style="position:fixed; bottom:10px; right:10px; z-index:1001;">Toggle Debug</button>
-
   <footer>
     <div class="divider"></div>
     <div class="footer-content">
@@ -270,22 +248,6 @@
   </footer>
 
 <script>
-    // To remove later: Debug console functions
-    function debugLog(message) {
-      const consoleEl = document.getElementById('debug-console');
-      const entry = document.createElement('div');
-      entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
-      consoleEl.appendChild(entry);
-      consoleEl.scrollTop = consoleEl.scrollHeight;
-      console.log(message);
-    }
-
-    document.getElementById('toggle-debug').addEventListener('click', function() {
-      const consoleEl = document.getElementById('debug-console');
-      consoleEl.style.display = consoleEl.style.display === 'none' ? 'block' : 'none';
-    });
-
-    // Wait for DOM to be fully loaded
     document.addEventListener('DOMContentLoaded', function() {
       const introScreen = document.querySelector('.intro-screen');
       const formScreen = document.querySelector('.form-screen');
@@ -558,10 +520,6 @@
         submitBtn.textContent = 'Submitting...';
 
         try {
-          // To remove later: Debug logging
-          debugLog('Starting form submission');
-          debugLog('Form data to submit: ' + JSON.stringify(formData, null, 2));
-
           const response = await fetch('/.netlify/functions/submit-to-airtable', {
             method: 'POST',
             headers: {
@@ -569,15 +527,9 @@
             },
             body: JSON.stringify(formData)
           });
-
-          // To remove later: Debug logging
-          debugLog(`Received response: ${response.status} ${response.statusText}`);
-          
-          const result = await response.json();
-          debugLog('Full response: ' + JSON.stringify(result, null, 2)); // To remove later
           
           if (!response.ok) {
-            throw new Error(result.error || `Server responded with ${response.status}`);
+            throw new Error('Submission failed');
           }
           
           // Success - transition to success screen
@@ -590,14 +542,7 @@
           }, 300);
           
         } catch (error) {
-          // To remove later: Enhanced error handling
-          debugLog('Submission error: ' + error.message);
-          if (error instanceof TypeError) {
-            debugLog('Network error - check connection');
-          }
-          
-          const errorMessage = `Submission failed: ${error.message}\n\nPlease check your connection and try again.`;
-          alert(errorMessage);
+          alert('Error submitting form. Please try again.');
         } finally {
           submitBtn.disabled = false;
           submitBtn.textContent = 'Submit';
