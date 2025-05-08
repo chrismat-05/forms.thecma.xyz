@@ -1,0 +1,11 @@
+{
+  "name": "airtable-form",
+  "version": "1.0.0",
+  "description": "Form submission to Airtable",
+  "scripts": {
+    "build": "echo 'No build needed' && exit 0"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.7"
+  }
+}
