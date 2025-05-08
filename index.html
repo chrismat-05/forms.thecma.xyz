@@ -1,1 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Form</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Space+Grotesk:wght@500&display=swap">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #6b21a8;
+      color: white;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
 
+    .main-container {
+      width: 90%;
+      max-width: 800px;
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(8px);
+      text-align: left;
+      margin: 2rem auto;
+      position: relative;
+    }
+
+    h1, h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      text-align: left;
+      margin-top: 0;
+    }
+
+    .gradient-text {
+      background: linear-gradient(90deg, #c084fc, #a855f7, #7e22ce);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .intro-screen, .form-screen, .success-screen {
+      display: none;
+    }
+
+    .active {
+      display: block;
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .option-group {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+      gap: 8px;
+    }
+
+    .radio-options, .checkbox-options {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    input[type="radio"], input[type="checkbox"] {
+      margin: 0;
+      width: 16px;
+      height: 16px;
+    }
+
+    label {
+      margin-bottom: 8px;
+      display: block;
+      width: 100%;
+    }
+
+    .form-navigation {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      width: 100%;
+    }
+
+    .gradient-btn {
+      background: linear-gradient(90deg, #c084fc, #a855f7, #7e22ce);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: fit-content;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .gradient-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-right {
+      margin-left: auto;
+    }
+
+    .btn-left {
+      margin-right: auto;
+    }
+
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      margin: 2rem 0;
+    }
+
+    footer {
+      width: 100%;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      margin-top: auto;
+    }
+
+    .footer-content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    footer a {
+      color: #c084fc;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+      color: #a855f7;
+    }
+    
+    /* Form input styling */
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-family: 'Poppins', sans-serif;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+    
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #a855f7;
+      box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.3);
+    }
+    
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    /* Error message styling */
+    .error-message {
+      color: #ff6b6b;
+      font-size: 0.85rem;
+      margin-top: 5px;
+      display: none;
+    }
+    
+    .has-error {
+      border-color: #ff6b6b !important;
+    }
+    
+    /* Success screen layout */
+    .success-content {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .success-content p {
+      margin-bottom: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="main-container">
+    <div class="intro-screen active">
+      <h1 class="gradient-text">Welcome to Our Survey</h1>
+      <p>Please take a few minutes to fill out this form. Your feedback helps us improve!</p>
+      <button class="gradient-btn btn-right" id="start-btn">Fill the Form</button>
+    </div>
+
+    <div class="form-screen">
+      <div class="form-header">
+        <span class="question-counter">Question 01 of 05</span>
+      </div>
+      <form id="survey-form">
+        <!-- Questions will be injected here -->
+      </form>
+      <div class="error-space"></div>
+      <div class="form-navigation">
+        <button class="gradient-btn btn-left" id="prev-btn" disabled>Back</button>
+        <button class="gradient-btn btn-right" id="next-btn">Continue</button>
+        <button class="gradient-btn btn-right" id="submit-btn" style="display:none;">Submit</button>
+      </div>
+    </div>
+
+    <div class="success-screen">
+      <div class="success-content">
+        <h2 class="gradient-text">Thank You!</h2>
+        <p>Your responses have been submitted successfully.</p>
+        <button class="gradient-btn btn-right" id="restart-btn">Fill Form Again</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="divider"></div>
+    <div class="footer-content">
+      <a href="https://thecma.xyz" target="_blank">thecma.xyz</a>
+      <p>© 2025 Chris Mathew Aje, All rights reserved.</p>
+    </div>
+  </footer>
+<script>
+    // Wait for DOM to be fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      const introScreen = document.querySelector('.intro-screen');
+      const formScreen = document.querySelector('.form-screen');
+      const successScreen = document.querySelector('.success-screen');
+      const startBtn = document.getElementById('start-btn');
+      const form = document.getElementById('survey-form');
+      const prevBtn = document.getElementById('prev-btn');
+      const nextBtn = document.getElementById('next-btn');
+      const submitBtn = document.getElementById('submit-btn');
+      const restartBtn = document.getElementById('restart-btn');
+      const questionCounter = document.querySelector('.question-counter');
+
+      const questions = [
+        { 
+          question: 'What is your name?', 
+          type: 'text', 
+          name: 'name',
+          required: true,
+          error: 'Please enter your name'
+        },
+        { 
+          question: 'What is your email?', 
+          type: 'email', 
+          name: 'email',
+          required: true,
+          error: 'Please enter a valid email'
+        },
+        { 
+          question: 'Select your gender:', 
+          type: 'radio', 
+          name: 'gender', 
+          options: ['Male', 'Female', 'Other'],
+          required: true,
+          error: 'Please select your gender'
+        },
+        { 
+          question: 'Select your hobbies:', 
+          type: 'checkbox', 
+          name: 'hobbies', 
+          options: ['Reading', 'Gaming', 'Traveling'],
+          required: false
+        },
+        { 
+          question: 'Leave a message:', 
+          type: 'textarea', 
+          name: 'message',
+          required: false
+        }
+      ];
+
+      let currentQuestion = 0;
+      let formData = {};
+
+      function showQuestion(index) {
+        const q = questions[index];
+        form.innerHTML = '';
+        questionCounter.textContent = `Question ${index + 1} of ${questions.length}`;
+
+        const label = document.createElement('label');
+        label.textContent = q.question;
+        label.htmlFor = q.name;
+        form.appendChild(label);
+
+        if (q.type === 'text' || q.type === 'email') {
+          const input = document.createElement('input');
+          input.type = q.type;
+          input.name = q.name;
+          input.id = q.name;
+          input.required = q.required || false;
+          
+          // Restore saved value
+          if (formData[q.name]) {
+            input.value = formData[q.name];
+          }
+          
+          form.appendChild(input);
+          
+          if (q.required) {
+            const error = document.createElement('div');
+            error.className = 'error-message';
+            error.textContent = q.error;
+            error.id = q.name + '-error';
+            form.appendChild(error);
+          }
+          
+          input.addEventListener('input', (e) => {
+            formData[q.name] = e.target.value;
+            if (q.required && e.target.value.trim() !== '') {
+              e.target.classList.remove('has-error');
+              document.getElementById(q.name + '-error').style.display = 'none';
+            }
+          });
+        } else if (q.type === 'textarea') {
+          const textarea = document.createElement('textarea');
+          textarea.name = q.name;
+          textarea.id = q.name;
+          textarea.required = q.required || false;
+          
+          if (formData[q.name]) {
+            textarea.value = formData[q.name];
+          }
+          
+          form.appendChild(textarea);
+          
+          if (q.required) {
+            const error = document.createElement('div');
+            error.className = 'error-message';
+            error.textContent = q.error || 'This field is required';
+            error.id = q.name + '-error';
+            form.appendChild(error);
+          }
+          
+          textarea.addEventListener('input', (e) => {
+            formData[q.name] = e.target.value;
+            if (q.required && e.target.value.trim() !== '') {
+              e.target.classList.remove('has-error');
+              document.getElementById(q.name + '-error').style.display = 'none';
+            }
+          });
+        } else if (q.type === 'radio' || q.type === 'checkbox') {
+          const optionsContainer = document.createElement('div');
+          optionsContainer.className = q.type === 'radio' ? 'radio-options' : 'checkbox-options';
+          
+          q.options.forEach(option => {
+            const optionWrapper = document.createElement('div');
+            optionWrapper.classList.add('option-group');
+            
+            const input = document.createElement('input');
+            input.type = q.type;
+            input.name = q.name;
+            input.value = option;
+            input.id = q.name + '-' + option.toLowerCase().replace(/\s+/g, '-');
+            if (q.required && q.type === 'radio') {
+              input.required = true;
+            }
+            
+            if (q.type === 'radio' && formData[q.name] === option) {
+              input.checked = true;
+            } else if (q.type === 'checkbox' && Array.isArray(formData[q.name])) {
+              input.checked = formData[q.name].includes(option);
+            }
+            
+            const inputLabel = document.createElement('label');
+            inputLabel.htmlFor = q.name + '-' + option.toLowerCase().replace(/\s+/g, '-');
+            inputLabel.textContent = option;
+            
+            optionWrapper.appendChild(input);
+            optionWrapper.appendChild(inputLabel);
+            optionsContainer.appendChild(optionWrapper);
+            
+            input.addEventListener('change', (e) => {
+              if (q.type === 'radio') {
+                formData[q.name] = e.target.value;
+                if (q.required) {
+                  document.getElementById(q.name + '-error').style.display = 'none';
+                }
+              } else {
+                if (!formData[q.name]) {
+                  formData[q.name] = [];
+                }
+                if (e.target.checked) {
+                  formData[q.name].push(e.target.value);
+                } else {
+                  formData[q.name] = formData[q.name].filter(item => item !== e.target.value);
+                }
+              }
+            });
+          });
+          
+          form.appendChild(optionsContainer);
+          
+          if (q.required && q.type === 'radio') {
+            const error = document.createElement('div');
+            error.className = 'error-message';
+            error.textContent = q.error;
+            error.id = q.name + '-error';
+            form.appendChild(error);
+          }
+        }
+
+        prevBtn.disabled = index === 0;
+        nextBtn.style.display = index < questions.length - 1 ? 'inline-block' : 'none';
+        submitBtn.style.display = index === questions.length - 1 ? 'inline-block' : 'none';
+      }
+
+      function validateCurrentQuestion() {
+        const q = questions[currentQuestion];
+        if (!q.required) return true;
+        
+        if (q.type === 'radio') {
+          const selected = document.querySelector(`input[name="${q.name}"]:checked`);
+          if (!selected) {
+            document.getElementById(q.name + '-error').style.display = 'block';
+            return false;
+          }
+          return true;
+        } else {
+          const input = document.querySelector(`[name="${q.name}"]`);
+          if (!input.value || input.value.trim() === '') {
+            input.classList.add('has-error');
+            document.getElementById(q.name + '-error').style.display = 'block';
+            return false;
+          }
+          return true;
+        }
+      }
+
+      function nextQuestion() {
+        if (!validateCurrentQuestion()) return;
+        if (currentQuestion < questions.length - 1) {
+          currentQuestion++;
+          showQuestion(currentQuestion);
+        }
+      }
+
+      function prevQuestion() {
+        if (currentQuestion > 0) {
+          currentQuestion--;
+          showQuestion(currentQuestion);
+        }
+      }
+
+      function validateAllQuestions() {
+        let isValid = true;
+        let firstInvalidQuestion = null;
+        
+        questions.forEach((q, index) => {
+          if (q.required) {
+            if (q.type === 'radio') {
+              // Check formData instead of DOM elements
+              if (!formData[q.name]) {
+                isValid = false;
+                if (firstInvalidQuestion === null) {
+                  firstInvalidQuestion = index;
+                }
+              }
+            } else {
+              // Check formData instead of DOM elements
+              if (!formData[q.name] || formData[q.name].trim() === '') {
+                isValid = false;
+                if (firstInvalidQuestion === null) {
+                  firstInvalidQuestion = index;
+                }
+              }
+            }
+          }
+        });
+        
+        if (!isValid && firstInvalidQuestion !== null) {
+          currentQuestion = firstInvalidQuestion;
+          showQuestion(currentQuestion);
+          
+          // Show error for the current question
+          const q = questions[currentQuestion];
+          if (q.type === 'radio') {
+            document.getElementById(q.name + '-error').style.display = 'block';
+          } else {
+            const input = document.querySelector(`[name="${q.name}"]`);
+            if (input) {
+              input.classList.add('has-error');
+              document.getElementById(q.name + '-error').style.display = 'block';
+            }
+          }
+        }
+        
+        return isValid;
+      }
+
+      async function submitForm() {
+        if (!validateAllQuestions()) return;
+        
+        // Show loading state
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
+
+        try {
+          // Send to Netlify Function
+          const response = await fetch('/.netlify/functions/submit-to-airtable', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+          });
+
+          if (!response.ok) throw new Error('Submission failed');
+          
+          // Success - transition to success screen
+          formScreen.style.opacity = 0;
+          setTimeout(() => {
+            formScreen.classList.remove('active');
+            successScreen.style.opacity = 0;
+            successScreen.classList.add('active');
+            successScreen.style.opacity = 1;
+          }, 300);
+          
+        } catch (error) {
+          alert('Error submitting form. Please try again.');
+          console.error('Submission error:', error);
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Submit';
+        }
+      }
+
+      // Initialize the start button
+      startBtn.addEventListener('click', function() {
+        introScreen.style.opacity = 0;
+        setTimeout(() => {
+          introScreen.classList.remove('active');
+          formScreen.style.opacity = 0;
+          formScreen.classList.add('active');
+          showQuestion(0);
+          formScreen.style.opacity = 1;
+        }, 300);
+      });
+
+      prevBtn.addEventListener('click', prevQuestion);
+      nextBtn.addEventListener('click', nextQuestion);
+      submitBtn.addEventListener('click', submitForm);
+      restartBtn.addEventListener('click', function() {
+        successScreen.style.opacity = 0;
+        setTimeout(() => {
+          location.reload();
+        }, 300);
+      });
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && formScreen.classList.contains('active')) {
+          e.preventDefault();
+          if (currentQuestion < questions.length - 1) nextQuestion();
+          else submitForm();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
