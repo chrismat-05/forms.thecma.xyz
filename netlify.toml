@@ -2,3 +2,6 @@
   command = "npm install && npm run build"
   functions = "netlify/functions"
   publish = "."
+
+[context.production.environment]
+  RELEASE_VERSION = "v1.!"
