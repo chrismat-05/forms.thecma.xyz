@@ -1,7 +1,6 @@
 const fetch = require('node-fetch');
 
 exports.handler = async (event) => {
-  // Only allow POST requests
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
@@ -13,10 +12,6 @@ exports.handler = async (event) => {
   try {
     const formData = JSON.parse(event.body);
 
-    // Debug: Log the first few chars of PAT (for verification)
-    console.log(`Using PAT starting with: ${AIRTABLE_TOKEN.substring(0, 5)}...`);
-    console.log(`Using Base ID: ${AIRTABLE_BASE_ID.substring(0, 5)}...`);
-
     const response = await fetch(
       `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}`,
       {
@@ -27,11 +22,10 @@ exports.handler = async (event) => {
         },
         body: JSON.stringify({
           fields: {
-            // Map fields explicitly
             "Name": formData.name,
             "Email": formData.email,
             "Gender": formData.gender,
-            "Hobbies": formData.hobbies?.join(', '),
+            "Hobbies ": formData.hobbies?.join(', '),
             "Message": formData.message
           }
         }),
@@ -40,8 +34,8 @@ exports.handler = async (event) => {
 
     if (!response.ok) {
       const errorDetails = await response.json();
-      console.error('Airtable error details:', errorDetails);
-      throw new Error(`Airtable error: ${response.statusText}`);
+      console.error('Submission error:', errorDetails);
+      throw new Error(`Failed to save to Airtable`);
     }
 
     return {
@@ -49,12 +43,11 @@ exports.handler = async (event) => {
       body: JSON.stringify({ message: 'Submission successful' }),
     };
   } catch (error) {
-    console.error('Full error:', error);
     return {
       statusCode: 500,
       body: JSON.stringify({ 
         error: error.message,
-        suggestion: 'Verify PAT permissions and base ID'
+        help: 'Check field names in Airtable match exactly'
       }),
     };
   }
