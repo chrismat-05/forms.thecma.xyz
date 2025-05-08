@@ -33,9 +33,7 @@ exports.handler = async (event) => {
     );
 
     if (!response.ok) {
-      const errorDetails = await response.json();
-      console.error('Submission error:', errorDetails);
-      throw new Error(`Failed to save to Airtable`);
+      throw new Error('Failed to save to Airtable');
     }
 
     return {
@@ -45,10 +43,7 @@ exports.handler = async (event) => {
   } catch (error) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ 
-        error: error.message,
-        help: 'Check field names in Airtable match exactly'
-      }),
+      body: JSON.stringify({ error: error.message }),
     };
   }
 };
