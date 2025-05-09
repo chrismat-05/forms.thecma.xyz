@@ -1,0 +1,15 @@
+This animated form is a versatile sample designed for easy customization. It can be adapted for various uses, from surveys to feedback collection. Tailor colors, fields, and animations to fit your needs—perfect for enhancing engagement across different platforms.
+https://forms.thecma.xyz/
+
+Copyright (c) 2025 Chris Mathew Aje
+
+This software is the exclusive and proprietary property of Chris Mathew Aje. 
+Unauthorized copying, redistribution, or modification of this software or its parts, via any medium, is strictly prohibited.
+
+This codebase is not licensed for public or private distribution, and may not be reused, resold, or modified for commercial or personal purposes without explicit written permission.
+
+All rights reserved.
+
+For licensing inquiries or commercial use, contact:
+chrismaje63@gmail.com
+https://contact.thecma.xyz
